@@ -16,10 +16,8 @@ public class ContactController {
 	ContactRepository R_Contact;
 	
 	@GetMapping(value="/all")
-	public List<Contact> getAll(){
-		
-		return (List<Contact>) R_Contact.findAll();
-		
+	public List<Contact> getAll(){		
+		return (List<Contact>) R_Contact.findAll();		
 	}
 	
 
