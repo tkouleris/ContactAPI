@@ -3,6 +3,7 @@ package com.tkouleris.contact.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,5 +38,18 @@ public class ContactController {
 	{	
 		return R_Contact.save(contact);
 	}
+	
+	@DeleteMapping(path = "contacts/{contact_id}")
+	@ResponseBody
+	public Contact delete(@PathVariable("contact_id") long contact_id)
+	{
+		Contact contact = R_Contact.findById(contact_id).orElse(null);
+		
+		R_Contact.delete(contact);
+		
+		return contact;
+	}
+	
+	
 
 }
