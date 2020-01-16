@@ -53,6 +53,8 @@ public class ContactController {
 	public ResponseEntity<Contact> update(@PathVariable("contact_id") long contact_id, @RequestBody Contact contact)
 	{
 		Contact upd_contact = R_Contact.findById(contact_id).orElse(null);
+		if(upd_contact == null) return new ResponseEntity<>(contact,HttpStatus.NOT_FOUND);
+		
 		if(contact.getContact_firstname() != null )upd_contact.setContact_firstname(contact.getContact_firstname());
 		if(contact.getContact_lastname() != null )upd_contact.setContact_lastname(contact.getContact_lastname());
 		if(contact.getContact_phone() != null )upd_contact.setContact_phone(contact.getContact_phone());
