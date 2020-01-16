@@ -43,7 +43,10 @@ public class Contact {
 	public String getContact_phone() {
 		return contact_phone;
 	}
-	public void setContact_phone(String contact_phone) {
+	public void setContact_phone(String contact_phone) throws Exception {
+		if (contact_phone.contains("[a-zA-Z]+") == true && contact_phone.length() > 10){
+			throw new Exception("Phone number must contain only numbers");
+		}
 		this.contact_phone = contact_phone;
 	}
 	
