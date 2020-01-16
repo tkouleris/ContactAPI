@@ -30,9 +30,14 @@ public class ContactController {
 	}
 	
 	@GetMapping(value="contacts/{contact_id}")
-	public Contact getContact(@PathVariable("contact_id") long contact_id)
+	public ResponseEntity<Contact> getContact(@PathVariable("contact_id") long contact_id)
 	{		
-		return R_Contact.findById(contact_id).orElse(null);
+		Contact contact = R_Contact.findById(contact_id).orElse(null);
+		
+		HttpStatus StatusCode = HttpStatus.OK;
+		if(contact == null ) StatusCode = HttpStatus.NOT_FOUND; 
+		
+		return new ResponseEntity<>(contact, StatusCode);
 	}
 	
 	@PostMapping(path = "contacts/create", consumes = "application/json", produces = "application/json")
