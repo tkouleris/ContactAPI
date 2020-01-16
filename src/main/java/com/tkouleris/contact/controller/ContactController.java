@@ -42,19 +42,25 @@ public class ContactController {
 	
 	@PostMapping(path = "contacts/create", consumes = "application/json", produces = "application/json")
 	@ResponseBody
-	public Contact create(@RequestBody Contact contact)
+	public ResponseEntity<Contact> create(@RequestBody Contact contact)
 	{	
-		return R_Contact.save(contact);
+		Contact newContact = R_Contact.save(contact);
+		
+		return new ResponseEntity<>(newContact,HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping(path = "contacts/{contact_id}")
 	@ResponseBody
-	public Contact delete(@PathVariable("contact_id") long contact_id)
+	public ResponseEntity<Contact> delete(@PathVariable("contact_id") long contact_id)
 	{
 		Contact contact = R_Contact.findById(contact_id).orElse(null);
 		
-		R_Contact.delete(contact);
-		
-		return contact;
+		HttpStatus  StatusCode = HttpStatus.NOT_FOUND;		
+		if(contact != null ) {
+			R_Contact.delete(contact);
+			StatusCode = HttpStatus.OK;
+		}
+				
+		return new ResponseEntity<>(contact,StatusCode);
 	}	
 }
