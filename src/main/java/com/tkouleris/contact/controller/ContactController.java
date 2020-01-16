@@ -1,7 +1,5 @@
 package com.tkouleris.contact.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +46,21 @@ public class ContactController {
 		Contact newContact = R_Contact.save(contact);
 		
 		return new ResponseEntity<>(newContact,HttpStatus.CREATED);
+	}
+	
+	@PutMapping(path = "contacts/{contact_id}", consumes = "application/json", produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<Contact> update(@PathVariable("contact_id") long contact_id, @RequestBody Contact contact)
+	{
+		Contact upd_contact = R_Contact.findById(contact_id).orElse(null);
+		if(contact.getContact_firstname() != null )upd_contact.setContact_firstname(contact.getContact_firstname());
+		if(contact.getContact_lastname() != null )upd_contact.setContact_lastname(contact.getContact_lastname());
+		if(contact.getContact_phone() != null )upd_contact.setContact_phone(contact.getContact_phone());
+		if(contact.getContact_email() != null )upd_contact.setContact_email(contact.getContact_email());
+		
+		R_Contact.save(upd_contact);
+		
+		return new ResponseEntity<>(upd_contact,HttpStatus.OK);
 	}
 	
 	@DeleteMapping(path = "contacts/{contact_id}")
