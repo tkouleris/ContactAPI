@@ -1,15 +1,17 @@
 package com.tkouleris.contact.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tkouleris.contact.Model.Contact;
@@ -22,7 +24,6 @@ public class ContactController {
 	ContactRepository R_Contact;
 	
 	@GetMapping(value="contacts/all")
-	@ResponseBody
 	public ResponseEntity<Iterable<Contact>> getAll(){		
 		Iterable<Contact> contacts = R_Contact.findAll();
 	    return new ResponseEntity<>(contacts , HttpStatus.OK);	
@@ -39,8 +40,7 @@ public class ContactController {
 		return new ResponseEntity<>(contact, StatusCode);
 	}
 	
-	@PostMapping(path = "contacts/create", consumes = "application/json", produces = "application/json")
-	@ResponseBody
+	@PostMapping(path = "contacts/create", consumes = "application/json", produces = "application/json")	
 	public ResponseEntity<Contact> create(@RequestBody Contact contact)
 	{	
 		Contact newContact = R_Contact.save(contact);
@@ -49,8 +49,7 @@ public class ContactController {
 	}
 	
 	@PutMapping(path = "contacts/{contact_id}", consumes = "application/json", produces = "application/json")
-	@ResponseBody
-	public ResponseEntity<Contact> update(@PathVariable("contact_id") long contact_id, @RequestBody Contact contact)
+	public ResponseEntity<Contact> update(@PathVariable("contact_id") long contact_id, @RequestBody @Valid Contact contact) throws Exception
 	{
 		Contact upd_contact = R_Contact.findById(contact_id).orElse(null);
 		if(upd_contact == null) return new ResponseEntity<>(contact,HttpStatus.NOT_FOUND);
@@ -66,7 +65,6 @@ public class ContactController {
 	}
 	
 	@DeleteMapping(path = "contacts/{contact_id}")
-	@ResponseBody
 	public ResponseEntity<Contact> delete(@PathVariable("contact_id") long contact_id)
 	{
 		Contact contact = R_Contact.findById(contact_id).orElse(null);
@@ -79,4 +77,12 @@ public class ContactController {
 				
 		return new ResponseEntity<>(contact,StatusCode);
 	}	
+	
+	@ExceptionHandler({Exception.class})
+	public ResponseEntity<String> handleException( Exception e)
+	{
+		
+		return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+	}
+	
 }
