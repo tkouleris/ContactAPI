@@ -1,5 +1,9 @@
 package com.tkouleris.contact.controller;
 
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,35 +27,62 @@ public class ContactController {
 	ContactRepository R_Contact;
 	
 	@GetMapping(value="contacts/all")
-	public ResponseEntity<Iterable<Contact>> getAll(){		
+	public ResponseEntity<Object> getAll(){		
 		Iterable<Contact> contacts = R_Contact.findAll();
-	    return new ResponseEntity<>(contacts , HttpStatus.OK);	
+		
+	    Map<String, Object> body = new LinkedHashMap<>();
+	    body.put("timestamp", LocalDateTime.now());
+	    body.put("message", "Contacts List");
+	    body.put("data", contacts);
+	    
+	    return new ResponseEntity<>(body, HttpStatus.OK);	
 	}
 	
 	@GetMapping(value="contacts/{contact_id}")
-	public ResponseEntity<Contact> getContact(@PathVariable("contact_id") long contact_id)
+	public ResponseEntity<Object> getContact(@PathVariable("contact_id") long contact_id)
 	{		
 		Contact contact = R_Contact.findById(contact_id).orElse(null);
 		
 		HttpStatus StatusCode = HttpStatus.OK;
-		if(contact == null ) StatusCode = HttpStatus.NOT_FOUND; 
+		String msg = "Contact Found";
+		if(contact == null ) {
+			StatusCode = HttpStatus.NOT_FOUND;
+			msg = "Contact not found";
+		}
 		
-		return new ResponseEntity<>(contact, StatusCode);
+	    Map<String, Object> body = new LinkedHashMap<>();
+	    body.put("timestamp", LocalDateTime.now());
+	    body.put("message", msg);
+	    body.put("data", contact);
+		
+		return new ResponseEntity<>(body, StatusCode);
 	}
 	
 	@PostMapping(path = "contacts/create", consumes = "application/json", produces = "application/json")	
-	public ResponseEntity<Contact> create(@RequestBody Contact contact)
+	public ResponseEntity<Object> create(@RequestBody Contact contact)
 	{	
 		Contact newContact = R_Contact.save(contact);
 		
-		return new ResponseEntity<>(newContact,HttpStatus.CREATED);
+	    Map<String, Object> body = new LinkedHashMap<>();
+	    body.put("timestamp", LocalDateTime.now());
+	    body.put("message", "Contact created!");
+	    body.put("data", newContact);
+		
+		return new ResponseEntity<>(body,HttpStatus.CREATED);
 	}
 	
 	@PutMapping(path = "contacts/{contact_id}", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Contact> update(@PathVariable("contact_id") long contact_id, @RequestBody @Valid Contact contact) throws Exception
+	public ResponseEntity<Object> update(@PathVariable("contact_id") long contact_id, @RequestBody @Valid Contact contact) throws Exception
 	{
 		Contact upd_contact = R_Contact.findById(contact_id).orElse(null);
-		if(upd_contact == null) return new ResponseEntity<>(contact,HttpStatus.NOT_FOUND);
+		if(upd_contact == null) {
+		    Map<String, Object> body = new LinkedHashMap<>();
+		    body.put("timestamp", LocalDateTime.now());
+		    body.put("message", "Contact not found!");		    
+		    
+			return new ResponseEntity<>(body,HttpStatus.NOT_FOUND);			
+		}
+			
 		
 		if(contact.getContact_firstname() != null )upd_contact.setContact_firstname(contact.getContact_firstname());
 		if(contact.getContact_lastname() != null )upd_contact.setContact_lastname(contact.getContact_lastname());
@@ -60,21 +91,33 @@ public class ContactController {
 		
 		R_Contact.save(upd_contact);
 		
-		return new ResponseEntity<>(upd_contact,HttpStatus.OK);
+	    Map<String, Object> body = new LinkedHashMap<>();
+	    body.put("timestamp", LocalDateTime.now());
+	    body.put("message", "Contact Updated!");
+	    body.put("data", upd_contact);
+		
+		return new ResponseEntity<>(body,HttpStatus.OK);
 	}
 	
 	@DeleteMapping(path = "contacts/{contact_id}")
-	public ResponseEntity<Contact> delete(@PathVariable("contact_id") long contact_id)
+	public ResponseEntity<Object> delete(@PathVariable("contact_id") long contact_id)
 	{
 		Contact contact = R_Contact.findById(contact_id).orElse(null);
 		
-		HttpStatus  StatusCode = HttpStatus.NOT_FOUND;		
+		HttpStatus  StatusCode = HttpStatus.NOT_FOUND;
+		String msg = "Contact not found";
 		if(contact != null ) {
 			R_Contact.delete(contact);
 			StatusCode = HttpStatus.OK;
+			msg = "Contact Deleted";
 		}
+		
+	    Map<String, Object> body = new LinkedHashMap<>();
+	    body.put("timestamp", LocalDateTime.now());
+	    body.put("message", msg);
+	    body.put("data", contact);
 				
-		return new ResponseEntity<>(contact,StatusCode);
+		return new ResponseEntity<>(body,StatusCode);
 	}	
 	
 
