@@ -4,9 +4,7 @@ The sole purpose of this repository is to start learning Spring Boot by
 developing an API that holds and retrives contacts.
 </p>
 
-### Spring Boot image:https://ci.spring.io/api/v1/teams/spring-boot/pipelines/spring-boot-2.3.x/jobs/build/badge["Build Status", link="https://ci.spring.io/teams/spring-boot/pipelines/spring-boot-2.3.x?groups=Build"] image:https://badges.gitter.im/Join Chat.svg["Chat",link="https://gitter.im/spring-projects/spring-boot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
-:docs: https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference
-:github: https://github.com/spring-projects/spring-boot
+### Spring Boot
 
 Spring Boot makes it easy to create Spring-powered, production-grade applications and
 services with absolute minimum fuss. It takes an opinionated view of the Spring platform
