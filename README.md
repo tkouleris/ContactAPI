@@ -4,6 +4,11 @@ The sole purpose of this repository is to start learning Spring Boot by
 developing an API that holds and retrives contacts.
 </p>
 
+<h2>Swagger Documentation</h2>
+<p>
+There is available swagger documentation at http://localhost:8080/swagger-ui.html
+</p>
+
 ### Spring Boot
 
 Spring Boot makes it easy to create Spring-powered, production-grade applications and
