@@ -1,6 +1,5 @@
 package com.tkouleris.contact;
 
-import java.util.Collection;
 import java.util.Collections;
 
 import org.springframework.boot.SpringApplication;
