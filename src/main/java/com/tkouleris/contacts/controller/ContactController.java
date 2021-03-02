@@ -1,5 +1,6 @@
 package com.tkouleris.contacts.controller;
 
+import com.tkouleris.contacts.dto.response.ApiResponse;
 import com.tkouleris.contacts.entity.Contact;
 import com.tkouleris.contacts.service.ContactService;
 import org.springframework.http.HttpStatus;
@@ -25,12 +26,18 @@ public class ContactController {
     @GetMapping(path = "/all", produces = "application/json")
     public ResponseEntity<Object> getContacts(){
         List<Contact> contacts = this.contactService.all();
-        return new ResponseEntity<>(contacts, HttpStatus.OK);
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setData(contacts);
+        apiResponse.setMessage("contacts list");
+        return new ResponseEntity<>(apiResponse.getBodyResponse(), HttpStatus.OK);
     }
 
     @PostMapping(path = "/create", produces = "application/json")
     public ResponseEntity<Object> createContact(@RequestBody Contact contact){
         Contact newContact = this.contactService.create(contact);
-        return new ResponseEntity<>(newContact, HttpStatus.CREATED);
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setData(newContact);
+        apiResponse.setMessage("contacts list");
+        return new ResponseEntity<>(apiResponse.getBodyResponse(), HttpStatus.CREATED);
     }
 }
