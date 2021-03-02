@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class ContactService {
 
-    private IContactsRepository contactsRepository;
+    private final IContactsRepository contactsRepository;
 
     public ContactService(IContactsRepository contactsRepository) {
         this.contactsRepository = contactsRepository;
@@ -20,4 +20,11 @@ public class ContactService {
     }
 
 
+    public Contact create(Contact contact) {
+        Contact newContact = new Contact();
+        newContact.setFirstname(contact.getFirstname());
+        newContact.setLastname(contact.getLastname());
+        newContact.setPhone(contact.getPhone());
+        return this.contactsRepository.save(newContact);
+    }
 }
