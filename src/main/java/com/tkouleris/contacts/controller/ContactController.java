@@ -3,6 +3,7 @@ package com.tkouleris.contacts.controller;
 import com.tkouleris.contacts.dto.response.ApiResponse;
 import com.tkouleris.contacts.entity.Contact;
 import com.tkouleris.contacts.service.ContactService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,11 +18,8 @@ import java.util.List;
 @RequestMapping("/api/contacts")
 public class ContactController {
 
-    private final ContactService contactService;
-
-    public ContactController(ContactService contactService) {
-        this.contactService = contactService;
-    }
+    @Autowired
+    private ContactService contactService;
 
     @GetMapping(path = "/all", produces = "application/json")
     public ResponseEntity<Object> getContacts(){
