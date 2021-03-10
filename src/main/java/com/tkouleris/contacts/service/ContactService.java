@@ -27,4 +27,26 @@ public class ContactService {
         newContact.setPhone(contact.getPhone());
         return this.contactsRepository.save(newContact);
     }
+
+    public Contact update(Contact contact) throws Exception {
+        Contact retrievedContact = this.contactsRepository.findById((long)contact.getId()).orElse(null);
+        if(retrievedContact == null){
+            throw new Exception("Contact not found");
+        }
+
+        if(contact.getPhone() != null){
+            retrievedContact.setPhone(contact.getPhone());
+        }
+
+        if(contact.getFirstname() != null){
+            retrievedContact.setFirstname(contact.getFirstname());
+        }
+
+        if(contact.getLastname() != null){
+            retrievedContact.setLastname(contact.getLastname());
+        }
+
+        return this.contactsRepository.save(retrievedContact);
+
+    }
 }

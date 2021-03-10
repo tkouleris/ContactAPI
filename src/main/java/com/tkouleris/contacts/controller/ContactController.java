@@ -38,4 +38,13 @@ public class ContactController {
         apiResponse.setMessage("contacts list");
         return new ResponseEntity<>(apiResponse.getBodyResponse(), HttpStatus.CREATED);
     }
+
+    @PostMapping(path = "/update", produces = "application/json")
+    public ResponseEntity<Object> updateContact(@RequestBody Contact contact) throws Exception {
+        Contact updatedContact = this.contactService.update(contact);
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setData(updatedContact);
+        apiResponse.setMessage("contacts list");
+        return new ResponseEntity<>(apiResponse.getBodyResponse(), HttpStatus.OK);
+    }
 }
