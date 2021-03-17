@@ -3,7 +3,6 @@ package com.tkouleris.contacts.weblayer;
 
 import com.tkouleris.contacts.dao.IContactsRepository;
 import com.tkouleris.contacts.entity.Contact;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNull;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,11 +26,14 @@ public class ContactsTest {
     private IContactsRepository contactsRepository;
 
     @Autowired
+    private Helper helper;
+
+    @Autowired
     private TestRestTemplate testRestTemplate;
 
     @BeforeEach
     public void cleanup(){
-        contactsRepository.deleteAll();
+        this.helper.cleanAll();
     }
 
     @Test
