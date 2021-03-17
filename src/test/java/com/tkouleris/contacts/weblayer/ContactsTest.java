@@ -4,14 +4,20 @@ package com.tkouleris.contacts.weblayer;
 import com.tkouleris.contacts.dao.IContactsRepository;
 import com.tkouleris.contacts.entity.Contact;
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
+
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,7 +30,7 @@ public class ContactsTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    @Before
+    @BeforeEach
     public void cleanup(){
         contactsRepository.deleteAll();
     }
@@ -73,6 +79,23 @@ public class ContactsTest {
         assertEquals("777",retrievedContact.getPhone());
         assertEquals("Alvin",retrievedContact.getFirstname());
         assertEquals("Chipmunk",retrievedContact.getLastname());
+    }
+
+    @Test
+    public void deleteAContact(){
+        // given
+        Contact contact = createValidContact();
+        Contact savedContact = contactsRepository.save(contact);
+
+        // when
+        ResponseEntity<Object> response =  testRestTemplate.exchange("/api/contacts/delete/"+contact.getId()
+                , HttpMethod.DELETE
+                , HttpEntity.EMPTY
+                ,Object.class);
+        List<Contact> contacts = (List<Contact>) contactsRepository.findAll();
+        // then
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals(0,contacts.size());
     }
 
     // helpers

@@ -49,4 +49,13 @@ public class ContactService {
         return this.contactsRepository.save(retrievedContact);
 
     }
+
+    public Contact delete(long id) throws Exception {
+        Contact contact = this.contactsRepository.findById(id).orElse(null);
+        if(contact == null){
+            throw new Exception("Contact not found");
+        }
+        this.contactsRepository.delete(contact);
+        return contact;
+    }
 }

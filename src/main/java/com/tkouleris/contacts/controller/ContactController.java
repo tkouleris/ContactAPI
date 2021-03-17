@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -45,6 +42,15 @@ public class ContactController {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setData(updatedContact);
         apiResponse.setMessage("contacts list");
+        return new ResponseEntity<>(apiResponse.getBodyResponse(), HttpStatus.OK);
+    }
+
+    @DeleteMapping(path="/delete/{id}", produces = "application/json")
+    public ResponseEntity<Object> deleteContact(@PathVariable("id") long id) throws Exception {
+        Contact deletedContact = this.contactService.delete(id);
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setData(deletedContact);
+        apiResponse.setMessage("contact deleted");
         return new ResponseEntity<>(apiResponse.getBodyResponse(), HttpStatus.OK);
     }
 }
