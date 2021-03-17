@@ -37,7 +37,7 @@ public class ContactsTest {
     }
 
     @Test
-    public void returnAllContactsStatusOK()
+    public void returnAllContacts_StatusOK()
     {
         // given
 
@@ -50,7 +50,7 @@ public class ContactsTest {
     }
 
     @Test
-    public void aNewContactIsSaved(){
+    public void aNewContactIsSaved_whenContactIsValid_receiveCreated(){
         // given
         Contact newContact = createValidContact();
 
@@ -63,7 +63,7 @@ public class ContactsTest {
     }
 
     @Test
-    public void updatesAContact(){
+    public void updatesAContact_whenContactIsValid_receiveOK(){
         // given
         Contact contact = createValidContact();
         Contact savedContact = contactsRepository.save(contact);
@@ -83,7 +83,7 @@ public class ContactsTest {
     }
 
     @Test
-    public void deleteAContact(){
+    public void deleteAContact_whenContactExists_receiveOK(){
         // given
         Contact contact = createValidContact();
         Contact savedContact = contactsRepository.save(contact);

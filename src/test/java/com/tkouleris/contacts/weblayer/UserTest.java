@@ -33,7 +33,7 @@ public class UserTest {
     }
 
     @Test
-    public void registerUserTest(){
+    public void registerUser_whenUserIsValid_receiveCreated(){
         // given
         User user = new User();
         user.setUsername("testuser");
