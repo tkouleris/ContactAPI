@@ -3,14 +3,20 @@ package com.tkouleris.contacts.weblayer;
 
 import com.tkouleris.contacts.dao.IContactsRepository;
 import com.tkouleris.contacts.entity.Contact;
+import com.tkouleris.contacts.entity.User;
+import com.tkouleris.contacts.service.CustomUserDetails;
+import com.tkouleris.contacts.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -31,6 +37,8 @@ public class ContactsTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+    private String token;
+
     @BeforeEach
     public void cleanup(){
         this.helper.cleanAll();
@@ -40,10 +48,13 @@ public class ContactsTest {
     public void returnAllContacts_StatusOK()
     {
         // given
-
+        String token = this.helper.getToken();
         // when
-        ResponseEntity<Object> response =  testRestTemplate.getForEntity("/api/contacts/all",null, Object.class);
-
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity entity = new HttpEntity(headers);
+//        ResponseEntity<Object> response =  testRestTemplate.getForEntity("/api/contacts/all",null, Object.class);
+        ResponseEntity<Object> response = testRestTemplate.exchange("/api/contacts/all", HttpMethod.GET, entity, (Class<Object>) null, Object.class);
         // then
         assertEquals( 0, contactsRepository.count());
         assertEquals(response.getStatusCode().value(), 200);
@@ -53,9 +64,13 @@ public class ContactsTest {
     public void aNewContactIsSaved_whenContactIsValid_receiveCreated(){
         // given
         Contact newContact = createValidContact();
-
+        String token = this.helper.getToken();
         // when
-        ResponseEntity<Object> response =  testRestTemplate.postForEntity("/api/contacts/create",newContact, Object.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<Contact> entity = new HttpEntity<>(newContact,headers);
+//        ResponseEntity<Object> response =  testRestTemplate.postForEntity("/api/contacts/create",newContact, Object.class);
+        ResponseEntity<Object> response = testRestTemplate.exchange("/api/contacts/create", HttpMethod.POST, entity, (Class<Object>) null, Object.class);
 
         // then
         assertEquals( 1, contactsRepository.count());
@@ -70,9 +85,14 @@ public class ContactsTest {
         savedContact.setPhone("777");
         savedContact.setFirstname("Alvin");
         savedContact.setLastname("Chipmunk");
+        String token = this.helper.getToken();
 
         // when
-        ResponseEntity<Object> response =  testRestTemplate.postForEntity("/api/contacts/update",savedContact, Object.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<Contact> entity = new HttpEntity<>(savedContact,headers);
+//        ResponseEntity<Object> response =  testRestTemplate.postForEntity("/api/contacts/update",savedContact, Object.class);
+        ResponseEntity<Object> response = testRestTemplate.exchange("/api/contacts/update", HttpMethod.POST, entity, (Class<Object>) null, Object.class);
         Contact retrievedContact = contactsRepository.findById(savedContact.getId()).orElse(null);
 
         // then
@@ -87,11 +107,15 @@ public class ContactsTest {
         // given
         Contact contact = createValidContact();
         Contact savedContact = contactsRepository.save(contact);
+        String token = this.helper.getToken();
 
         // when
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<Contact> entity = new HttpEntity<>(savedContact,headers);
         ResponseEntity<Object> response =  testRestTemplate.exchange("/api/contacts/delete/"+contact.getId()
                 , HttpMethod.DELETE
-                , HttpEntity.EMPTY
+                , entity
                 ,Object.class);
         List<Contact> contacts = (List<Contact>) contactsRepository.findAll();
         // then
