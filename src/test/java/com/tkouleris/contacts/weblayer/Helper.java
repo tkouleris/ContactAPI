@@ -23,6 +23,7 @@ public class Helper {
     public void cleanAll()
     {
         this.contactsRepository.deleteAll();
+        this.userRepository.deleteAll();
     }
 
     public User initializeUser(){
@@ -32,15 +33,8 @@ public class Helper {
         return this.userRepository.save(u);
     }
 
-    public String getToken()
-    {
-        List<User> users = (List<User>) this.userRepository.findAll();
-        User user = null;
-        if(users.size() == 0){
-            user = initializeUser();
-        }else{
-            user = users.get(0);
-        }
+    public String getToken(){
+        User user = initializeUser();
         UserDetails userDetails = new CustomUserDetails(user);
         JwtUtil jwt = new JwtUtil();
         return jwt.generateToken(userDetails);

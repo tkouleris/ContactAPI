@@ -6,6 +6,7 @@ import com.tkouleris.contacts.entity.Contact;
 import com.tkouleris.contacts.entity.User;
 import com.tkouleris.contacts.service.CustomUserDetails;
 import com.tkouleris.contacts.util.JwtUtil;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
