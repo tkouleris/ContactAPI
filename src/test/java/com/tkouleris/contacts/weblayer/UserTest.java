@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotSame;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -41,8 +42,10 @@ public class UserTest {
         // when
         ResponseEntity<Object> response =  testRestTemplate.postForEntity("/api/users/register",user, Object.class);
         List<User> users = (List<User>) this.userRepository.findAll();
+
         // then
         assertEquals(response.getStatusCode().value(), 201);
         assertEquals(1, users.size());
+        assertNotSame(users.get(0).getPassword(), user.getPassword());
     }
 }
