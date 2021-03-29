@@ -2,14 +2,13 @@ package com.tkouleris.contacts.service;
 
 import com.tkouleris.contacts.dao.IUserRepository;
 import com.tkouleris.contacts.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     private final IUserRepository userRepository;
 
@@ -19,6 +18,7 @@ public class UserService {
     }
 
     public User createUser(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return this.userRepository.save(user);
     }
 
