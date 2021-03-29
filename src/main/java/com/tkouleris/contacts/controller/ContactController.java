@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -25,8 +26,9 @@ public class ContactController {
     private UserService userService;
 
     @GetMapping(path = "/all", produces = "application/json")
-    public ResponseEntity<Object> getContacts(){
-        List<Contact> contacts = this.contactService.all();
+    public ResponseEntity<Object> getContacts(Authentication authentication){
+        User user = this.userService.findByUsername(authentication.getName());
+        List<Contact> contacts = this.contactService.all(user);
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setData(contacts);
         apiResponse.setMessage("contacts list");

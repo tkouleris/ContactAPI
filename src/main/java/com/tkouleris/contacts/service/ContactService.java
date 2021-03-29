@@ -18,8 +18,8 @@ public class ContactService {
         this.contactsRepository = contactsRepository;
     }
 
-    public List<Contact> all(){
-        return (List<Contact>) this.contactsRepository.findAll();
+    public List<Contact> all(User user){
+        return (List<Contact>) this.contactsRepository.findAllByUserID(user.getId());
     }
 
 
