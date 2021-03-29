@@ -2,10 +2,13 @@ package com.tkouleris.contacts.controller;
 
 import com.tkouleris.contacts.dto.response.ApiResponse;
 import com.tkouleris.contacts.entity.Contact;
+import com.tkouleris.contacts.entity.User;
 import com.tkouleris.contacts.service.ContactService;
+import com.tkouleris.contacts.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +21,9 @@ public class ContactController {
     @Autowired
     private ContactService contactService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping(path = "/all", produces = "application/json")
     public ResponseEntity<Object> getContacts(){
         List<Contact> contacts = this.contactService.all();
@@ -28,8 +34,9 @@ public class ContactController {
     }
 
     @PostMapping(path = "/create", produces = "application/json")
-    public ResponseEntity<Object> createContact(@RequestBody Contact contact){
-        Contact newContact = this.contactService.create(contact);
+    public ResponseEntity<Object> createContact(Authentication auth, @RequestBody Contact contact){
+        User loggedInUser = this.userService.findByUsername(auth.getName());
+        Contact newContact = this.contactService.create(contact, loggedInUser);
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setData(newContact);
         apiResponse.setMessage("contacts list");

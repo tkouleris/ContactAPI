@@ -1,7 +1,10 @@
 package com.tkouleris.contacts.service;
 
 import com.tkouleris.contacts.dao.IContactsRepository;
+import com.tkouleris.contacts.dao.IUserRepository;
 import com.tkouleris.contacts.entity.Contact;
+import com.tkouleris.contacts.entity.User;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,11 +23,12 @@ public class ContactService {
     }
 
 
-    public Contact create(Contact contact) {
+    public Contact create(Contact contact, User user) {
         Contact newContact = new Contact();
         newContact.setFirstname(contact.getFirstname());
         newContact.setLastname(contact.getLastname());
         newContact.setPhone(contact.getPhone());
+        newContact.setContact_user(user);
         return this.contactsRepository.save(newContact);
     }
 
