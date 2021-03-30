@@ -4,6 +4,7 @@ import com.tkouleris.contacts.dao.IContactsRepository;
 import com.tkouleris.contacts.dao.IUserRepository;
 import com.tkouleris.contacts.entity.Contact;
 import com.tkouleris.contacts.entity.User;
+import com.tkouleris.contacts.exception.contact.ContactNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class ContactService {
     public Contact update(Contact contact) throws Exception {
         Contact retrievedContact = this.contactsRepository.findById((long)contact.getId()).orElse(null);
         if(retrievedContact == null){
-            throw new Exception("Contact not found");
+            throw new ContactNotFoundException("Contact not found");
         }
 
         if(contact.getPhone() != null){
@@ -57,7 +58,7 @@ public class ContactService {
     public Contact delete(long id) throws Exception {
         Contact contact = this.contactsRepository.findById(id).orElse(null);
         if(contact == null){
-            throw new Exception("Contact not found");
+            throw new ContactNotFoundException("Contact not found");
         }
         this.contactsRepository.delete(contact);
         return contact;
